@@ -42,6 +42,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // TODO: 여기에 코드를 입력합니다.
 
+	// 동시 실행 방지
+	HANDLE hMutex = CreateMutex(NULL, TRUE, L"SokcuScreen");
+	BOOL bFound = FALSE;
+	if (GetLastError() == ERROR_ALREADY_EXISTS)
+	{
+		HWND hWnd = FindWindow(L"SokcuScreen", 0);
+		SetForegroundWindow(hWnd);
+		return false;
+	}
+
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_SOKCUSCREEN, szWindowClass, MAX_LOADSTRING);
@@ -106,7 +116,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
     wcex.lpszMenuName   = 0;
-    wcex.lpszClassName  = szWindowClass;
+    wcex.lpszClassName  = L"SokcuScreen";
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SOKCUSCREEN));
 
     return RegisterClassExW(&wcex);
